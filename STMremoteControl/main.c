@@ -6,13 +6,19 @@
 #include "stm32f4xx_gpio.h"
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_exti.h"
+#include "stm32f4xx_tim.h"
+#include "stm32f4xx_syscfg.h"
+#include "stm32f4xx_usart.h"
 #include "misc.h"
+
 #include "usbd_cdc_core.h"
 #include "usbd_usr.h"
 #include "usbd_desc.h"
 #include "usbd_cdc_vcp.h"
 #include "usb_dcd_int.h"
 #include "main.h"
+
+int ktoraDioda;
 
 int main(void)
 {
@@ -21,12 +27,12 @@ int main(void)
 
 	/* Initialize USB, GPIO, Timer, IO, SysTick, and all those other things you do in the morning */
 	init();
-
+	ktoraDioda = 1;
 
 	while (1)
 	{
 		/* Blink the orange LED at 1Hz */
-		if (500 == ticker)
+		/*if (500 == ticker)
 		{
 			GPIOD->BSRRH = GPIO_Pin_13;
 		}
@@ -41,7 +47,7 @@ int main(void)
 		 *  - Echo it back
 		 *  - Turn the green LED on for 10ms
 		 */
-		uint8_t theByte;
+		/*uint8_t theByte;
 		if (VCP_get_char(&theByte))
 		{
 			VCP_put_char(theByte);
@@ -53,23 +59,18 @@ int main(void)
 		if (0 == downTicker)
 		{
 			GPIOD->BSRRH = GPIO_Pin_12;
-		}
+		}*/
 	}
 	return 0;
 }
 
-
 void init()
 {
 	/*GPIO init*/
-	GPIO_init();
+	GPIOdiody_init();
 
-	/*Interrupt init*/
-	NVIC_init();
-
-	/*Timer init*/
-	TIMER_1HZ_init(2999);
-	TIMER_Interrupt_init();
+	/*USART init*/
+	init_USART();
 
 	/* Setup SysTick or CROD! */
 	if (SysTick_Config(SystemCoreClock / 1000))
@@ -77,84 +78,110 @@ void init()
 		ColorfulRingOfDeath();
 	}
 
-
 	/* Setup USB */
 	USBD_Init(&USB_OTG_dev,
 	            USB_OTG_FS_CORE_ID,
 	            &USR_desc,
 	            &USBD_CDC_cb,
 	            &USR_cb);
-
 	return;
 }
 
-void NVIC_init(){
-	//dla kana³u 1
-	NVIC_InitTypeDef interrupt;
-	interrupt.NVIC_IRQChannel = TIM2_IRQn; 				//w intrukcji z przerwan jest TIM3_IRQn
-	interrupt.NVIC_IRQChannelPreemptionPriority = 0x00;
-	interrupt.NVIC_IRQChannelSubPriority = 0x00;
-	interrupt.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&interrupt);
-}
-void EXTI_init(){
-	EXTI_InitTypeDef exti;
-	exti.EXTI_Line = EXTI_Line1;
-	exti.EXTI_Mode = EXTI_Mode_Interrupt;
-	exti.EXTI_Trigger = EXTI_Trigger_Rising;
-	exti.EXTI_LineCmd = ENABLE;
-	EXTI_Init(&exti);
-
-	//podlaczenie pinu 1 z portu A (PA1) do modulu przerwan zewnetrznych
-	SYSCFG_EXTILineConfig(GPIOA, EXTI_PinSource1);
-
-}
-void GPIO_init(){
+void GPIOdiody_init(){
 	/* STM32F4 discovery LEDs */
 	GPIO_InitTypeDef LED_Config;
 
 	/* Always remember to turn on the peripheral clock...  If not, you may be up till 3am debugging... */
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
-	LED_Config.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13| GPIO_Pin_14| GPIO_Pin_15;
+	LED_Config.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
 	LED_Config.GPIO_Mode = GPIO_Mode_OUT;
 	LED_Config.GPIO_OType = GPIO_OType_PP;
 	LED_Config.GPIO_Speed = GPIO_Speed_25MHz;
 	LED_Config.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_Init(GPIOD, &LED_Config);
 }
-void TIMER_1HZ_init(uint16_t a){
+void init_USART(){
 
- 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);
- 	TIM_TimeBaseInitTypeDef str;
- 	str.TIM_Period=27999;
- 	str.TIM_Prescaler=a;
- 	str.TIM_ClockDivision=TIM_CKD_DIV1;
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
 
- 	str.TIM_CounterMode=TIM_CounterMode_Up;
- 	TIM_TimeBaseInit(TIM2,&str);
- 	TIM_Cmd(TIM2, ENABLE);
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource11, GPIO_AF_USART3);
+	//TX line
+	GPIO_InitTypeDef pb1011;
+	pb1011.GPIO_OType = GPIO_OType_PP;
+	pb1011.GPIO_PuPd = GPIO_PuPd_UP;
+	pb1011.GPIO_Pin = GPIO_Pin_10;
+	pb1011.GPIO_Mode = GPIO_Mode_AF;
+	pb1011.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOB, &pb1011);
+
+	//RX line
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource11, GPIO_AF_USART3);
+	pb1011.GPIO_Mode = GPIO_Mode_AF;
+	pb1011.GPIO_Pin = GPIO_Pin_11;
+	GPIO_Init(GPIOB, &pb1011);
+
+	//USART
+	USART_InitTypeDef usa;
+	usa.USART_BaudRate = 115200;
+	usa.USART_WordLength = USART_WordLength_8b;
+	usa.USART_StopBits = USART_StopBits_1;
+	usa.USART_Parity = USART_Parity_No;
+	usa.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+	usa.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+	USART_Init(USART3, &usa);
+	USART_Cmd(USART3, ENABLE);
+
+	//USART interrupt
+	NVIC_InitTypeDef usart;
+	USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
+	usart.NVIC_IRQChannel = USART3_IRQn;
+	usart.NVIC_IRQChannelPreemptionPriority = 0;
+	usart.NVIC_IRQChannelSubPriority = 0;
+	usart.NVIC_IRQChannelCmd = ENABLE;
+
+	NVIC_Init(&usart);
+	NVIC_EnableIRQ(USART3_IRQn);
 }
- void TIMER_Interrupt_init(void)
- {
- 	NVIC_InitTypeDef str;
- 	str.NVIC_IRQChannel = TIM2_IRQn ;
- 	str.NVIC_IRQChannelPreemptionPriority = 0x00;
- 	str.NVIC_IRQChannelSubPriority = 0x00;
- 	str.NVIC_IRQChannelCmd = ENABLE ;
- 	NVIC_Init(&str);
- 	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
- 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE );
- }
- /*function to sample RC5 data*/
- void TIM2_IRQHandler(void)
- {
- 	if(TIM_GetITStatus(TIM2,TIM_IT_Update) != RESET)
- 	{
-	 	GPIO_ToggleBits(GPIOD,GPIO_Pin_14|GPIO_Pin_15 | GPIO_Pin_12|GPIO_Pin_13);
- 		TIM_ClearITPendingBit(TIM2,TIM_IT_Update);
- 	}
- }
 
+uint16_t decode;
+void USART3_IRQHandler(){
+	int a;
+	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET){
+		ALL_OFF;
+		for(a = 0; a < 10000; a++);
+		switch (ktoraDioda) {
+			case 0:{
+				LED_GREEN_ON;
+				ktoraDioda = 1;
+				for(a = 0; a < 10000; a++);
+				break;
+			}
+			case 1:{
+				LED_ORANGE_ON;
+				ktoraDioda = 2;
+				break;
+			}
+			case 2:{
+				LED_RED_ON;
+				ktoraDioda = 3;
+				break;
+			}
+			case 3:{
+				LED_BLUE_ON;
+				ktoraDioda = 4;
+				break;
+			}
+			case 4:{
+				ALL_OFF;
+				ktoraDioda = 0;
+				break;
+			}
+		}
+		decode = USART_IT_RXNE;
+		USART_ClearFlag(USART3,USART_IT_RXNE);
+	}
+}
 
 /*
  * Call this to indicate a failure.  Blinks the STM32F4 discovery LEDs
