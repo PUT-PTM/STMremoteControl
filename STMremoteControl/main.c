@@ -32,7 +32,7 @@ int main(void)
 	while (1)
 	{
 		/* Blink the orange LED at 1Hz */
-		/*if (500 == ticker)
+		if (500 == ticker)
 		{
 			GPIOD->BSRRH = GPIO_Pin_13;
 		}
@@ -47,7 +47,7 @@ int main(void)
 		 *  - Echo it back
 		 *  - Turn the green LED on for 10ms
 		 */
-		/*uint8_t theByte;
+		uint8_t theByte;
 		if (VCP_get_char(&theByte))
 		{
 			VCP_put_char(theByte);
@@ -59,7 +59,7 @@ int main(void)
 		if (0 == downTicker)
 		{
 			GPIOD->BSRRH = GPIO_Pin_12;
-		}*/
+		}
 	}
 	return 0;
 }
@@ -91,7 +91,6 @@ void GPIOdiody_init(){
 	/* STM32F4 discovery LEDs */
 	GPIO_InitTypeDef LED_Config;
 
-	/* Always remember to turn on the peripheral clock...  If not, you may be up till 3am debugging... */
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
 	LED_Config.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
 	LED_Config.GPIO_Mode = GPIO_Mode_OUT;
@@ -210,7 +209,6 @@ void ColorfulRingOfDeath(void)
 /*
  * Interrupt Handlers
  */
-
 void SysTick_Handler(void)
 {
 	ticker++;
@@ -219,15 +217,6 @@ void SysTick_Handler(void)
 		downTicker--;
 	}
 }
-
-void NMI_Handler(void)       {}
-void HardFault_Handler(void) { ColorfulRingOfDeath(); }
-void MemManage_Handler(void) { ColorfulRingOfDeath(); }
-void BusFault_Handler(void)  { ColorfulRingOfDeath(); }
-void UsageFault_Handler(void){ ColorfulRingOfDeath(); }
-void SVC_Handler(void)       {}
-void DebugMon_Handler(void)  {}
-void PendSV_Handler(void)    {}
 
 void OTG_FS_IRQHandler(void)
 {

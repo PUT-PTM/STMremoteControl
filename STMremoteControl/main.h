@@ -45,6 +45,16 @@ void PendSV_Handler(void);
 void OTG_FS_IRQHandler(void);
 void OTG_FS_WKUP_IRQHandler(void);
 
+
+void NMI_Handler(void)       {}
+void HardFault_Handler(void) { ColorfulRingOfDeath(); }
+void MemManage_Handler(void) { ColorfulRingOfDeath(); }
+void BusFault_Handler(void)  { ColorfulRingOfDeath(); }
+void UsageFault_Handler(void){ ColorfulRingOfDeath(); }
+void SVC_Handler(void)       {}
+void DebugMon_Handler(void)  {}
+void PendSV_Handler(void)    {}
+
 #ifdef __cplusplus
 }
 #endif
