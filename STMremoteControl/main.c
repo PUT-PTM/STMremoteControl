@@ -93,42 +93,42 @@ uint16_t decode;
 void USART3_IRQHandler(){
 	int a;
 	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET){
-		for (a = 0; a < 400000; a++);
+		for (a = 0; a < 4000000; a++);
 		switch (ktoraDioda){
 			case 0:{
 				LED_GREEN_ON;
 				ktoraDioda = 1;
-				for (a = 0; a < 400000; a++);
+				for (a = 0; a < 4000000; a++);
 				break;
 			}
 			case 1:{
 				LED_ORANGE_ON;
 				ktoraDioda = 2;
-				for (a = 0; a < 400000; a++);
+				for (a = 0; a < 4000000; a++);
 				break;
 			}
 			case 2:{
 				LED_RED_ON;
 				ktoraDioda = 3;
-				for (a = 0; a < 400000; a++);
+				for (a = 0; a < 4000000; a++);
 				break;
 			}
 			case 3:{
 				LED_BLUE_ON;
 				ktoraDioda = 4;
-				for (a = 0; a < 400000; a++);
+				for (a = 0; a < 4000000; a++);
 				break;
 			}
 			default:{
 				ALL_OFF;
 				ktoraDioda = 0;
-				for (a = 0; a < 400000; a++);
+				for (a = 0; a < 4000000; a++);
 				break;
 			}
 		}
 
 	}
-	decode = USART_ReceiveData(USART3);
+	USART_ReceiveData(USART3);
 }
 
 /*
@@ -195,7 +195,7 @@ int main(void)
 
 	while (1)
 	{
-
+		decode = USART3->DR;
 	}
 	return 0;
 }
