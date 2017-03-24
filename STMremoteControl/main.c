@@ -19,51 +19,6 @@
 #include "main.h"
 
 int ktoraDioda;
-
-int main(void)
-{
-	/* Set up the system clocks */
-	SystemInit();
-
-	/* Initialize USB, GPIO, Timer, IO, SysTick, and all those other things you do in the morning */
-	init();
-	ktoraDioda = 1;
-
-	while (1)
-	{
-		/* Blink the orange LED at 1Hz */
-		if (500 == ticker)
-		{
-			GPIOD->BSRRH = GPIO_Pin_13;
-		}
-		else if (1000 == ticker)
-		{
-			ticker = 0;
-			GPIOD->BSRRL = GPIO_Pin_13;
-		}
-
-
-		/* If there's data on the virtual serial port:
-		 *  - Echo it back
-		 *  - Turn the green LED on for 10ms
-		 */
-		uint8_t theByte;
-		if (VCP_get_char(&theByte))
-		{
-			VCP_put_char(theByte);
-
-
-			GPIOD->BSRRL = GPIO_Pin_12;
-			downTicker = 10;
-		}
-		if (0 == downTicker)
-		{
-			GPIOD->BSRRH = GPIO_Pin_12;
-		}
-	}
-	return 0;
-}
-
 void init()
 {
 	/*GPIO init*/
@@ -72,18 +27,9 @@ void init()
 	/*USART init*/
 	init_USART();
 
-	/* Setup SysTick or CROD! */
-	if (SysTick_Config(SystemCoreClock / 1000))
-	{
-		ColorfulRingOfDeath();
-	}
+	/* USB init*/
+	USBD_Init(&USB_OTG_dev,	USB_OTG_FS_CORE_ID, &USR_desc, &USBD_CDC_cb, &USR_cb);
 
-	/* Setup USB */
-	USBD_Init(&USB_OTG_dev,
-	            USB_OTG_FS_CORE_ID,
-	            &USR_desc,
-	            &USBD_CDC_cb,
-	            &USR_cb);
 	return;
 }
 
@@ -147,39 +93,42 @@ uint16_t decode;
 void USART3_IRQHandler(){
 	int a;
 	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET){
-		ALL_OFF;
-		for(a = 0; a < 10000; a++);
-		switch (ktoraDioda) {
+		for (a = 0; a < 400000; a++);
+		switch (ktoraDioda){
 			case 0:{
 				LED_GREEN_ON;
 				ktoraDioda = 1;
-				for(a = 0; a < 10000; a++);
+				for (a = 0; a < 400000; a++);
 				break;
 			}
 			case 1:{
 				LED_ORANGE_ON;
 				ktoraDioda = 2;
+				for (a = 0; a < 400000; a++);
 				break;
 			}
 			case 2:{
 				LED_RED_ON;
 				ktoraDioda = 3;
+				for (a = 0; a < 400000; a++);
 				break;
 			}
 			case 3:{
 				LED_BLUE_ON;
 				ktoraDioda = 4;
+				for (a = 0; a < 400000; a++);
 				break;
 			}
-			case 4:{
+			default:{
 				ALL_OFF;
 				ktoraDioda = 0;
+				for (a = 0; a < 400000; a++);
 				break;
 			}
 		}
-		decode = USART_IT_RXNE;
-		USART_ClearFlag(USART3,USART_IT_RXNE);
+
 	}
+	decode = USART_ReceiveData(USART3);
 }
 
 /*
@@ -232,4 +181,21 @@ void OTG_FS_WKUP_IRQHandler(void)
     USB_OTG_UngateClock(&USB_OTG_dev);
   }
   EXTI_ClearITPendingBit(EXTI_Line18);
+}
+
+
+int main(void)
+{
+	/* Set up the system clocks */
+	SystemInit();
+
+	/* Initialize USB, GPIO, Timer, IO, SysTick, and all those other things you do in the morning */
+	init();
+	ktoraDioda = 5;
+
+	while (1)
+	{
+
+	}
+	return 0;
 }
