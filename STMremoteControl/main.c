@@ -11,14 +11,11 @@
 #include "stm32f4xx_usart.h"
 #include "misc.h"
 
-#include "usbd_cdc_core.h"
-#include "usbd_usr.h"
-#include "usbd_desc.h"
-#include "usbd_cdc_vcp.h"
-#include "usb_dcd_int.h"
 #include "main.h"
 
 int ktoraDioda;
+unsigned int decode;
+
 void init()
 {
 	/*GPIO init*/
@@ -26,9 +23,6 @@ void init()
 
 	/*USART init*/
 	init_USART();
-
-	/* USB init*/
-	USBD_Init(&USB_OTG_dev,	USB_OTG_FS_CORE_ID, &USR_desc, &USBD_CDC_cb, &USR_cb);
 
 	return;
 }
@@ -80,6 +74,7 @@ void init_USART(){
 	//USART interrupt
 	NVIC_InitTypeDef usart;
 	USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
+
 	usart.NVIC_IRQChannel = USART3_IRQn;
 	usart.NVIC_IRQChannelPreemptionPriority = 0;
 	usart.NVIC_IRQChannelSubPriority = 0;
@@ -89,12 +84,42 @@ void init_USART(){
 	NVIC_EnableIRQ(USART3_IRQn);
 }
 
-uint16_t decode;
 void USART3_IRQHandler(){
 	int a;
-	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET){
-		for (a = 0; a < 4000000; a++);
-		switch (ktoraDioda){
+		if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)//enter interrupt when STM32 receice data.
+			for (a = 0; a < 400000; a++);
+				if(ktoraDioda == 0){
+					LED_GREEN_ON;
+					ktoraDioda = 1;
+					for (a = 0; a < 400000; a++);
+				}
+				else if(ktoraDioda == 1){
+					LED_ORANGE_ON;
+					ktoraDioda = 2;
+					for (a = 0; a < 400000; a++);
+				}
+				else if(ktoraDioda == 2){
+					LED_RED_ON;
+					ktoraDioda = 3;
+					for (a = 0; a < 400000; a++);
+				}
+				else if(ktoraDioda == 3){
+					LED_BLUE_ON;
+					ktoraDioda = 4;
+					for (a = 0; a < 400000; a++);
+				}
+				else{
+					ALL_OFF;
+					ktoraDioda = 0;
+					for (a = 0; a < 400000; a++);
+				}
+
+         USART_ClearITPendingBit(USART3, USART_IT_RXNE);
+         decode = (unsigned int) USART_ReceiveData(USART3);
+			//decode = USART_ReceiveData(USART3);
+
+			//USART_ClearITPendingBit(USART3, USART_IT_RXNE);
+		/*switch (ktoraDioda){
 			case 0:{
 				LED_GREEN_ON;
 				ktoraDioda = 1;
@@ -125,10 +150,13 @@ void USART3_IRQHandler(){
 				for (a = 0; a < 4000000; a++);
 				break;
 			}
-		}
+		}*/
 
-	}
-	USART_ReceiveData(USART3);
+	/*USART_ClearITPendingBit(USART3, USART_IT_RXNE);
+	USART_ClearFlag(USART3, USART_IT_RXNE);
+	decode = USART_GetITStatus(USART3, USART_IT_RXNE);
+*/
+
 }
 
 /*
@@ -137,53 +165,6 @@ void USART3_IRQHandler(){
  * Keep that in mind when debugging, knowing the clock speed might help
  * with debugging.
  */
-void ColorfulRingOfDeath(void)
-{
-	uint16_t ring = 1;
-	while (1)
-	{
-		uint32_t count = 0;
-		while (count++ < 500000);
-
-		GPIOD->BSRRH = (ring << 12);
-		ring = ring << 1;
-		if (ring >= 1<<4)
-		{
-			ring = 1;
-		}
-		GPIOD->BSRRL = (ring << 12);
-	}
-}
-
-/*
- * Interrupt Handlers
- */
-void SysTick_Handler(void)
-{
-	ticker++;
-	if (downTicker > 0)
-	{
-		downTicker--;
-	}
-}
-
-void OTG_FS_IRQHandler(void)
-{
-  USBD_OTG_ISR_Handler (&USB_OTG_dev);
-}
-
-void OTG_FS_WKUP_IRQHandler(void)
-{
-  if(USB_OTG_dev.cfg.low_power)
-  {
-    *(uint32_t *)(0xE000ED10) &= 0xFFFFFFF9 ;
-    SystemInit();
-    USB_OTG_UngateClock(&USB_OTG_dev);
-  }
-  EXTI_ClearITPendingBit(EXTI_Line18);
-}
-
-
 int main(void)
 {
 	/* Set up the system clocks */
@@ -191,11 +172,11 @@ int main(void)
 
 	/* Initialize USB, GPIO, Timer, IO, SysTick, and all those other things you do in the morning */
 	init();
-	ktoraDioda = 5;
+	ktoraDioda = 0;
 
 	while (1)
 	{
-		decode = USART3->DR;
+
 	}
 	return 0;
 }
