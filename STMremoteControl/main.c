@@ -87,84 +87,43 @@ void init_USART(){
 void USART3_IRQHandler(){
 	int a;
 		if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)//enter interrupt when STM32 receice data.
-			for (a = 0; a < 400000; a++);
+	         decode = (unsigned int) USART_ReceiveData(USART3);
+			for (a = 0; a < 4000000; a++);
 				if(ktoraDioda == 0){
 					LED_GREEN_ON;
 					ktoraDioda = 1;
-					for (a = 0; a < 400000; a++);
+					while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
+						for (a = 0; a < 100; a++);
 				}
 				else if(ktoraDioda == 1){
 					LED_ORANGE_ON;
 					ktoraDioda = 2;
-					for (a = 0; a < 400000; a++);
+					while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
+						for (a = 0; a < 100; a++);
 				}
 				else if(ktoraDioda == 2){
 					LED_RED_ON;
 					ktoraDioda = 3;
-					for (a = 0; a < 400000; a++);
+					while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
+						for (a = 0; a < 100; a++);
 				}
 				else if(ktoraDioda == 3){
 					LED_BLUE_ON;
 					ktoraDioda = 4;
-					for (a = 0; a < 400000; a++);
+					while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
+						for (a = 0; a < 100; a++);
 				}
 				else{
 					ALL_OFF;
 					ktoraDioda = 0;
-					for (a = 0; a < 400000; a++);
+					while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
+						for (a = 0; a < 100; a++);
 				}
 
          USART_ClearITPendingBit(USART3, USART_IT_RXNE);
          decode = (unsigned int) USART_ReceiveData(USART3);
-			//decode = USART_ReceiveData(USART3);
-
-			//USART_ClearITPendingBit(USART3, USART_IT_RXNE);
-		/*switch (ktoraDioda){
-			case 0:{
-				LED_GREEN_ON;
-				ktoraDioda = 1;
-				for (a = 0; a < 4000000; a++);
-				break;
-			}
-			case 1:{
-				LED_ORANGE_ON;
-				ktoraDioda = 2;
-				for (a = 0; a < 4000000; a++);
-				break;
-			}
-			case 2:{
-				LED_RED_ON;
-				ktoraDioda = 3;
-				for (a = 0; a < 4000000; a++);
-				break;
-			}
-			case 3:{
-				LED_BLUE_ON;
-				ktoraDioda = 4;
-				for (a = 0; a < 4000000; a++);
-				break;
-			}
-			default:{
-				ALL_OFF;
-				ktoraDioda = 0;
-				for (a = 0; a < 4000000; a++);
-				break;
-			}
-		}*/
-
-	/*USART_ClearITPendingBit(USART3, USART_IT_RXNE);
-	USART_ClearFlag(USART3, USART_IT_RXNE);
-	decode = USART_GetITStatus(USART3, USART_IT_RXNE);
-*/
-
 }
 
-/*
- * Call this to indicate a failure.  Blinks the STM32F4 discovery LEDs
- * in sequence.  At 168Mhz, the blinking will be very fast - about 5 Hz.
- * Keep that in mind when debugging, knowing the clock speed might help
- * with debugging.
- */
 int main(void)
 {
 	/* Set up the system clocks */
