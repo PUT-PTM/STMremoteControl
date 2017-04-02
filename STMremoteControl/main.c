@@ -10,11 +10,11 @@
 #include "stm32f4xx_syscfg.h"
 #include "stm32f4xx_usart.h"
 #include "misc.h"
-
+#include "rc5.h"
 #include "main.h"
 
 int ktoraDioda;
-unsigned int decode;
+int decode;
 
 void init()
 {
@@ -84,44 +84,52 @@ void init_USART(){
 	NVIC_EnableIRQ(USART3_IRQn);
 }
 
+uint16_t dr;
+uint16_t brr;
+uint16_t x;
+
 void USART3_IRQHandler(){
 	int a;
-		if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)//enter interrupt when STM32 receice data.
-	         decode = (unsigned int) USART_ReceiveData(USART3);
-			for (a = 0; a < 4000000; a++);
-				if(ktoraDioda == 0){
-					LED_GREEN_ON;
-					ktoraDioda = 1;
-					while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
-						for (a = 0; a < 100; a++);
-				}
-				else if(ktoraDioda == 1){
-					LED_ORANGE_ON;
-					ktoraDioda = 2;
-					while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
-						for (a = 0; a < 100; a++);
-				}
-				else if(ktoraDioda == 2){
-					LED_RED_ON;
-					ktoraDioda = 3;
-					while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
-						for (a = 0; a < 100; a++);
-				}
-				else if(ktoraDioda == 3){
-					LED_BLUE_ON;
-					ktoraDioda = 4;
-					while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
-						for (a = 0; a < 100; a++);
-				}
-				else{
-					ALL_OFF;
-					ktoraDioda = 0;
-					while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
-						for (a = 0; a < 100; a++);
-				}
+		if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET){//enter interrupt when STM32 receice data.
+			dr = USART3->DR;
+			brr = USART3->BRR;
+			x = USART3->SR;
 
-         USART_ClearITPendingBit(USART3, USART_IT_RXNE);
-         decode = (unsigned int) USART_ReceiveData(USART3);
+			for (a = 0; a < 4000000; a++);
+			if(ktoraDioda == 0){
+				LED_GREEN_ON;
+				ktoraDioda = 1;
+				while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
+					for (a = 0; a < 100; a++);
+			}
+			else if(ktoraDioda == 1){
+				LED_ORANGE_ON;
+				ktoraDioda = 2;
+				while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
+					for (a = 0; a < 100; a++);
+			}
+			else if(ktoraDioda == 2){
+				LED_RED_ON;
+				ktoraDioda = 3;
+				while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
+					for (a = 0; a < 100; a++);
+			}
+			else if(ktoraDioda == 3){
+				LED_BLUE_ON;
+				ktoraDioda = 4;
+				while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
+					for (a = 0; a < 100; a++);
+			}
+			else{
+				ALL_OFF;
+				ktoraDioda = 0;
+				while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11)==1)
+					for (a = 0; a < 100; a++);
+			}
+			brr = USART3->BRR;
+			x = USART3->SR;
+		}
+
 }
 
 int main(void)
