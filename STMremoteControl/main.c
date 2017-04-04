@@ -7,7 +7,6 @@
 #include "stm32f4xx_exti.h"
 #include "stm32f4xx_tim.h"
 #include "stm32f4xx_syscfg.h"
-#include "stm32f4xx_usart.h"
 #include "misc.h"
 
 #include "main.h"
@@ -29,7 +28,6 @@ int main(void)
 
 	/*IR Init*/
 	UB_IRMP_Init();
-
 
 	/*Struct for IR-Data*/
 	IRMP_DATA  myIRData;

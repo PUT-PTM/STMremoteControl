@@ -1579,51 +1579,50 @@ static uint8_t                              IRMP_PIN;
  *---------------------------------------------------------------------------------------------------------------------------------------------------
  */
 #ifndef ANALYZE
-void
-irmp_init (void)
+void irmp_init (void)
 {
-#if defined(PIC_CCS) || defined(PIC_C18)                                // PIC: do nothing
-#elif defined (ARM_STM32)                                               // STM32
-   GPIO_InitTypeDef     GPIO_InitStructure;
+	#if defined(PIC_CCS) || defined(PIC_C18)                                // PIC: do nothing
+	#elif defined (ARM_STM32)                                               // STM32
+	   GPIO_InitTypeDef     GPIO_InitStructure;
 
-   /* GPIOx clock enable */
- #if defined (ARM_STM32L1XX)
-   RCC_AHBPeriphClockCmd(IRMP_PORT_RCC, ENABLE);
- #elif defined (ARM_STM32F10X)
-   RCC_APB2PeriphClockCmd(IRMP_PORT_RCC, ENABLE);
- #elif defined (ARM_STM32F4XX)
-   RCC_AHB1PeriphClockCmd(IRMP_PORT_RCC, ENABLE);
- #endif
+	   /* GPIOx clock enable */
+	 #if defined (ARM_STM32L1XX)
+	   RCC_AHBPeriphClockCmd(IRMP_PORT_RCC, ENABLE);
+	 #elif defined (ARM_STM32F10X)
+	   RCC_APB2PeriphClockCmd(IRMP_PORT_RCC, ENABLE);
+	 #elif defined (ARM_STM32F4XX)
+	   RCC_AHB1PeriphClockCmd(IRMP_PORT_RCC, ENABLE);
+	 #endif
 
-   /* GPIO Configuration */
-   GPIO_InitStructure.GPIO_Pin = IRMP_BIT;
- #if defined (ARM_STM32L1XX) || defined (ARM_STM32F4XX)
-   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
- #elif defined (ARM_STM32F10X)
-   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
- #endif
-   GPIO_Init(IRMP_PORT, &GPIO_InitStructure);
-#elif defined(STELLARIS_ARM_CORTEX_M4)
-     // Enable the GPIO port
-     ROM_SysCtlPeripheralEnable(IRMP_PORT_PERIPH);
+	   /* GPIO Configuration */
+	   GPIO_InitStructure.GPIO_Pin = IRMP_BIT;
+	 #if defined (ARM_STM32L1XX) || defined (ARM_STM32F4XX)
+	   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	 #elif defined (ARM_STM32F10X)
+	   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	 #endif
+	   GPIO_Init(IRMP_PORT, &GPIO_InitStructure);
+	#elif defined(STELLARIS_ARM_CORTEX_M4)
+		 // Enable the GPIO port
+		 ROM_SysCtlPeripheralEnable(IRMP_PORT_PERIPH);
 
-     // Set as an input
-     ROM_GPIODirModeSet(IRMP_PORT_BASE, IRMP_PORT_PIN, GPIO_DIR_MODE_IN);
-     ROM_GPIOPadConfigSet(IRMP_PORT_BASE, IRMP_PORT_PIN,
-                          GPIO_STRENGTH_2MA,
-                          GPIO_PIN_TYPE_STD_WPU);
-#else                                                                   // AVR
-    IRMP_PORT &= ~(1<<IRMP_BIT);                                        // deactivate pullup
-    IRMP_DDR &= ~(1<<IRMP_BIT);                                         // set pin to input
-#endif
+		 // Set as an input
+		 ROM_GPIODirModeSet(IRMP_PORT_BASE, IRMP_PORT_PIN, GPIO_DIR_MODE_IN);
+		 ROM_GPIOPadConfigSet(IRMP_PORT_BASE, IRMP_PORT_PIN,
+							  GPIO_STRENGTH_2MA,
+							  GPIO_PIN_TYPE_STD_WPU);
+	#else                                                                   // AVR
+		IRMP_PORT &= ~(1<<IRMP_BIT);                                        // deactivate pullup
+		IRMP_DDR &= ~(1<<IRMP_BIT);                                         // set pin to input
+	#endif
 
-#if IRMP_LOGGING == 1
-    irmp_uart_init ();
-#endif
+	#if IRMP_LOGGING == 1
+		irmp_uart_init ();
+	#endif
 }
 #endif
 /*---------------------------------------------------------------------------------------------------------------------------------------------------
