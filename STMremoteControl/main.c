@@ -1,23 +1,6 @@
-#define HSE_VALUE ((uint32_t)8000000) /* STM32 discovery uses a 8Mhz external crystal */
-
-#include "stm32f4xx_conf.h"
-#include "stm32f4xx.h"
-#include "stm32f4xx_gpio.h"
-#include "stm32f4xx_rcc.h"
-#include "stm32f4xx_exti.h"
-#include "stm32f4xx_tim.h"
-#include "stm32f4xx_syscfg.h"
-#include "misc.h"
-
 #include "main.h"
-#include "irmp.h"
-#include "irmpconfig.h"
-#include "irmpprotocols.h"
-#include "irmpsystem.h"
-#include "stm32_ub_led.h"
-#include "stm32_ub_irmp.h"
 
-
+int a;
 int main(void)
 {
 	/* Set up the system clocks */
@@ -32,8 +15,12 @@ int main(void)
 	/*Struct for IR-Data*/
 	IRMP_DATA  myIRData;
 
+	/*Init VCP*/
+	init();
+
 	while (1)
 	{
+
 		 // IR Data pollen
 		    if(UB_IRMP_Read(&myIRData)==TRUE) {
 		      // If IR data has been received
@@ -58,8 +45,38 @@ int main(void)
 					//Button "5"
 					if(myIRData.command==28)
 							ALL_OFF;
+
+					//VCP_DataTx(myIRData.command,16);
 		      }
 		    }
+
 	}
 	return 0;
 }
+
+void init()
+{
+	/* Setup USB */
+	USBD_Init(&USB_OTG_dev,
+	            USB_OTG_FS_CORE_ID,
+	            &USR_desc,
+	            &USBD_CDC_cb,
+	            &USR_cb);
+
+	return;
+}
+void OTG_FS_IRQHandler(void)
+{
+  USBD_OTG_ISR_Handler (&USB_OTG_dev);
+}
+void OTG_FS_WKUP_IRQHandler(void)
+{
+  if(USB_OTG_dev.cfg.low_power)
+  {
+    *(uint32_t *)(0xE000ED10) &= 0xFFFFFFF9 ;
+    SystemInit();
+    USB_OTG_UngateClock(&USB_OTG_dev);
+  }
+  EXTI_ClearITPendingBit(EXTI_Line18);
+}
+
