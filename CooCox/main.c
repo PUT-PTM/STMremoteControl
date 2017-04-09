@@ -1,6 +1,5 @@
 #include "main.h"
 
-int a;
 int main(void)
 {
 	/* Set up the system clocks */
@@ -20,7 +19,6 @@ int main(void)
 
 	while (1)
 	{
-		//control LEDS
 		 // IR Data pollen
 		    if(UB_IRMP_Read(&myIRData)==TRUE) {
 		      // If IR data has been received
@@ -45,6 +43,7 @@ int main(void)
 					//Button "5"
 					if(myIRData.command==28)
 							ALL_OFF;
+						
 					VCP_send_buffer(&myIRData.command,1);
 		      }
 		    }
