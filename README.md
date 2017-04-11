@@ -8,7 +8,6 @@ In the project STM32F407 Discovery microcontroller is used as a connection betwe
 
 # Attributons
 https://www.mikrocontroller.net/articles/IRMP <br />
-
 https://github.com/xenovacivus/STM32DiscoveryVCP
 
 # Credits
