@@ -53,8 +53,5 @@ __ALIGN_BEGIN USB_OTG_CORE_HANDLE  USB_OTG_dev __ALIGN_END;
 #define ALL_ON GPIOD->BSRRL = GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
 #define ALL_OFF GPIOD->BSRRH = GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
 
-/*
- * The USB data must be 4 byte aligned if DMA is enabled. This macro handles
- * the alignment, if necessary (it's actually magic, but don't tell anyone).
- */
+
 
