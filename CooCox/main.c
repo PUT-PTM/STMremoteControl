@@ -54,6 +54,17 @@ int main(void)
 	}
 	return 0;
 }
+void init()
+{
+	/* Setup USB */
+	USBD_Init(&USB_OTG_dev,
+	            USB_OTG_FS_CORE_ID,
+	            &USR_desc,
+	            &USBD_CDC_cb,
+	            &USR_cb);
+
+	return;
+}
 void TIMER_1HZ_init(uint16_t a){
 
  	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);
@@ -77,17 +88,7 @@ void TIMER_Interrupt_init(void)
  	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
  	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE );
  }
-void init()
-{
-	/* Setup USB */
-	USBD_Init(&USB_OTG_dev,
-	            USB_OTG_FS_CORE_ID,
-	            &USR_desc,
-	            &USBD_CDC_cb,
-	            &USR_cb);
 
-	return;
-}
 void OTG_FS_IRQHandler(void)
 {
   USBD_OTG_ISR_Handler (&USB_OTG_dev);
