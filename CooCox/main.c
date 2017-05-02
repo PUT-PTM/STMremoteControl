@@ -1,5 +1,10 @@
 #include "main.h"
 
+int lastCommand;
+int possible;
+/*Struct for IR-Data*/
+IRMP_DATA  myIRData;
+
 int main(void)
 {
 	/* Set up the system clocks */
@@ -11,15 +16,13 @@ int main(void)
 	/*IR Init*/
 	UB_IRMP_Init();
 
-	/*Struct for IR-Data*/
-	IRMP_DATA  myIRData;
-
 	/*Init VCP*/
 	init();
 
 	/*Init Timer */
 	TIMER_1HZ_init(9999);
 	TIMER_Interrupt_init();
+	int i;
 
 	while (1)
 	{
@@ -47,8 +50,11 @@ int main(void)
 					//Button "5"
 					if(myIRData.command==28)
 							ALL_OFF;
-						
-					VCP_send_buffer(&myIRData.command,1);
+
+					for(i=0;i<7500000;i++);
+					if(possible == 1)
+						VCP_send_buffer(&myIRData.command,1);
+
 		      }
 		    }
 	}
@@ -67,26 +73,44 @@ void init()
 }
 void TIMER_1HZ_init(uint16_t a){
 
- 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);
+ 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);
  	TIM_TimeBaseInitTypeDef str;
- 	str.TIM_Period=8399;
+ 	str.TIM_Period=2099; //WCZESNIEJ 8399, optymalnie 4199
  	str.TIM_Prescaler=a;
  	str.TIM_ClockDivision=TIM_CKD_DIV1;
 
  	str.TIM_CounterMode=TIM_CounterMode_Up;
- 	TIM_TimeBaseInit(TIM2,&str);
- 	TIM_Cmd(TIM2, ENABLE);
+ 	TIM_TimeBaseInit(TIM3,&str);
+ 	TIM_Cmd(TIM3, ENABLE);
 }
 void TIMER_Interrupt_init(void)
  {
  	NVIC_InitTypeDef str;
- 	str.NVIC_IRQChannel = TIM2_IRQn ;
+ 	str.NVIC_IRQChannel = TIM3_IRQn ;
  	str.NVIC_IRQChannelPreemptionPriority = 0x00;
  	str.NVIC_IRQChannelSubPriority = 0x00;
  	str.NVIC_IRQChannelCmd = ENABLE ;
  	NVIC_Init(&str);
- 	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
- 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE );
+ 	TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+ 	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE );
+ }
+void TIM3_IRQHandler(void)
+ {
+ 	if(TIM_GetITStatus(TIM3,TIM_IT_Update) != RESET)
+ 	{
+ 		if(myIRData.command != 0){
+			if(lastCommand == myIRData.command){
+				possible = 0;
+				myIRData.command = 0;
+			}
+			else if (lastCommand != myIRData.command)
+				possible = 1;
+ 		}
+ 		else
+ 			GPIO_ToggleBits(GPIOD, GPIO_Pin_14);
+
+ 		TIM_ClearITPendingBit(TIM3,TIM_IT_Update);
+ 	}
  }
 
 void OTG_FS_IRQHandler(void)
