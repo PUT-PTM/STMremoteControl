@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
+using System.Windows.Forms;
 
 namespace WindowsMediaPlayer
 {
@@ -33,6 +34,7 @@ namespace WindowsMediaPlayer
         {
             int indata = _serialPort.ReadByte();
             _indata = indata;
+            for (int i = 0; i < 100000000; i++) ;
         }
     }
 }
