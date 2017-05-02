@@ -13,6 +13,12 @@ using System.Runtime.InteropServices;
 
 namespace WindowsMediaPlayer
 {
+    static class Computer
+    {
+        [DllImport("Powrprof.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool SetSuspendState(bool hiberate, bool forceCritical, bool disableWakeEvent);
+
+    }
     static class KeyboardSend
     {
         [System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -80,6 +86,7 @@ namespace WindowsMediaPlayer
             int Activate([MarshalAs(UnmanagedType.LPStruct)] Guid iid, int dwClsCtx, IntPtr pActivationParams, [MarshalAs(UnmanagedType.IUnknown)] out object ppInterface);
         }
     }
+ 
     public partial class Form1 : Form
     {
         VCPPort _vcpport;
@@ -97,13 +104,13 @@ namespace WindowsMediaPlayer
         }
         private void control()
         {
+            int indata = _vcpport._indata;
             /*var pl = axWindowsMediaPlayer1.playlistCollection.newPlaylist("playlist");
             pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\Farben Lehre - Kwiaty.mp3"));
             axWindowsMediaPlayer1.currentPlaylist = pl;*/
-            while (true)
+            while (indata >= 0)
             {
-                for (int i = 0; i < 25000000; i++) ;
-                int indata = _vcpport._indata;
+                indata = _vcpport._indata;
                 switch (indata)
                 {
                     case 69:
@@ -114,14 +121,12 @@ namespace WindowsMediaPlayer
                                 KeyboardSend.KeyUp(Keys.VolumeDown);
                                 KeyboardSend.KeyDown(Keys.VolumeDown);
                             }
-                            for (int i = 0; i < 25000000; i++) ;
-                            indata = 0;                            
+                            indata = 0;
                             break;
                         }
                     case 70:
                         {
-                            KeyboardSend.KeyDown(Keys.Sleep);
-                            KeyboardSend.KeyUp(Keys.Sleep);
+                            Computer.SetSuspendState(true, true, true);
                             indata = 0;
                             break;
                         }
@@ -157,14 +162,12 @@ namespace WindowsMediaPlayer
                     case 7:
                         {
                             axWindowsMediaPlayer1.settings.volume -= 1;
-                            for (int i = 0; i < 250000000; i++) ;
                             indata = 0;
                             break;
                         }
                     case 21:
                         {
                             axWindowsMediaPlayer1.settings.volume += 1;
-                            for (int i = 0; i < 250000000; i++) ;
                             indata = 0;
                             break;
                         }
