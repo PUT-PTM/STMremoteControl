@@ -17,6 +17,10 @@ int main(void)
 	/*Init VCP*/
 	init();
 
+	/*Init Timer */
+	TIMER_1HZ_init(9999);
+	TIMER_Interrupt_init();
+
 	while (1)
 	{
 		 // IR Data pollen
@@ -47,11 +51,32 @@ int main(void)
 					VCP_send_buffer(&myIRData.command,1);
 		      }
 		    }
-
 	}
 	return 0;
 }
+void TIMER_1HZ_init(uint16_t a){
 
+ 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);
+ 	TIM_TimeBaseInitTypeDef str;
+ 	str.TIM_Period=8399;
+ 	str.TIM_Prescaler=a;
+ 	str.TIM_ClockDivision=TIM_CKD_DIV1;
+
+ 	str.TIM_CounterMode=TIM_CounterMode_Up;
+ 	TIM_TimeBaseInit(TIM2,&str);
+ 	TIM_Cmd(TIM2, ENABLE);
+}
+void TIMER_Interrupt_init(void)
+ {
+ 	NVIC_InitTypeDef str;
+ 	str.NVIC_IRQChannel = TIM2_IRQn ;
+ 	str.NVIC_IRQChannelPreemptionPriority = 0x00;
+ 	str.NVIC_IRQChannelSubPriority = 0x00;
+ 	str.NVIC_IRQChannelCmd = ENABLE ;
+ 	NVIC_Init(&str);
+ 	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+ 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE );
+ }
 void init()
 {
 	/* Setup USB */
