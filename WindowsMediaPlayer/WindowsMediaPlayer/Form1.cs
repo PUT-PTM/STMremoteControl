@@ -37,8 +37,7 @@ namespace WindowsMediaPlayer
             keybd_event((byte)vKey, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
         }
     }
-
-
+    
     public static class VolumeUtilities
     {
         public static float GetMasterVolume()
@@ -104,13 +103,21 @@ namespace WindowsMediaPlayer
         }
         private void control()
         {
+            bool funkcja = false;
             int indata = _vcpport._indata;
-            /*var pl = axWindowsMediaPlayer1.playlistCollection.newPlaylist("playlist");
-            pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\Farben Lehre - Kwiaty.mp3"));
-            axWindowsMediaPlayer1.currentPlaylist = pl;*/
-            while (indata >= 0)
+            var pl = axWindowsMediaPlayer1.playlistCollection.newPlaylist("playlist");
+            pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\1.mp3"));
+            axWindowsMediaPlayer1.currentPlaylist = pl;
+            axWindowsMediaPlayer1.Ctlcontrols.stop();
+            indata = _vcpport._indata;
+            while (indata >= 0) 
             {
                 indata = _vcpport._indata;
+                if (funkcja == true)
+                {
+                    _vcpport._indata = 0;
+                    funkcja = false;
+                }
                 switch (indata)
                 {
                     case 69:
@@ -122,53 +129,61 @@ namespace WindowsMediaPlayer
                                 KeyboardSend.KeyDown(Keys.VolumeDown);
                             }
                             indata = 0;
+                            funkcja = true;
                             break;
                         }
                     case 70:
                         {
                             Computer.SetSuspendState(true, true, true);
                             indata = 0;
+                            funkcja = true;
                             break;
                         }
                     case 71:
                         {
                             float vol = VolumeUtilities.GetMasterVolume();
-                            if (vol < 100)
+                            if (vol < 1)
                             {
                                 KeyboardSend.KeyDown(Keys.VolumeUp);
                                 KeyboardSend.KeyUp(Keys.VolumeUp);
                             }
                             indata = 0;
+                            funkcja = true;
                             break;
                         }
                     case 68:
                         {
                             axWindowsMediaPlayer1.Ctlcontrols.previous();
                             indata = 0;
+                            funkcja = true;
                             break;
                         }
                     case 64:
                         {
                             axWindowsMediaPlayer1.Ctlcontrols.next();
                             indata = 0;
+                            funkcja = true;
                             break;
                         }
                     case 67:
                         {
                             axWindowsMediaPlayer1.Ctlcontrols.play();
                             indata = 0;
+                            funkcja = true;
                             break;
                         }
                     case 7:
                         {
                             axWindowsMediaPlayer1.settings.volume -= 1;
                             indata = 0;
+                            funkcja = true;
                             break;
                         }
                     case 21:
                         {
                             axWindowsMediaPlayer1.settings.volume += 1;
                             indata = 0;
+                            funkcja = true;
                             break;
                         }
                     case 9:
@@ -176,6 +191,7 @@ namespace WindowsMediaPlayer
                             KeyboardSend.KeyDown(Keys.F17);
                             KeyboardSend.KeyUp(Keys.F17);
                             indata = 0;
+                            funkcja = true;
                             break;
                         }
                     case 22:
@@ -183,6 +199,7 @@ namespace WindowsMediaPlayer
                             KeyboardSend.KeyDown(Keys.F16);
                             KeyboardSend.KeyUp(Keys.F16);
                             indata = 0;
+                            funkcja = true;
                             break;
                         }
                     case 25:
@@ -190,6 +207,7 @@ namespace WindowsMediaPlayer
                             KeyboardSend.KeyDown(Keys.F15);
                             KeyboardSend.KeyUp(Keys.F15);
                             indata = 0;
+                            funkcja = true;
                             break;
                         }
                     case 13:
@@ -197,6 +215,7 @@ namespace WindowsMediaPlayer
                             KeyboardSend.KeyDown(Keys.F14);
                             KeyboardSend.KeyUp(Keys.F14);
                             indata = 0;
+                            funkcja = true;
                             break;
                         }
                     default:
