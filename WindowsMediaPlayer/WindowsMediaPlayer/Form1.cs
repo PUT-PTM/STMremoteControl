@@ -107,6 +107,15 @@ namespace WindowsMediaPlayer
             int indata = _vcpport._indata;
             var pl = axWindowsMediaPlayer1.playlistCollection.newPlaylist("playlist");
             pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\1.mp3"));
+            pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\2.mp3"));
+            pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\3.mp3"));
+            pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\4.mp3"));
+            pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\5.mp3"));
+            pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\6.mp3"));
+            pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\7.mp3"));
+            pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\8.mp3"));
+            pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\9.mp3"));
+            pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\10.mp3"));
             axWindowsMediaPlayer1.currentPlaylist = pl;
             axWindowsMediaPlayer1.Ctlcontrols.stop();
             indata = _vcpport._indata;
