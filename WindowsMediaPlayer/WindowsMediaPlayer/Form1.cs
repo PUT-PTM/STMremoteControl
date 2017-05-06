@@ -37,7 +37,6 @@ namespace WindowsMediaPlayer
             keybd_event((byte)vKey, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
         }
     }
-    
     public static class VolumeUtilities
     {
         public static float GetMasterVolume()
@@ -85,26 +84,40 @@ namespace WindowsMediaPlayer
             int Activate([MarshalAs(UnmanagedType.LPStruct)] Guid iid, int dwClsCtx, IntPtr pActivationParams, [MarshalAs(UnmanagedType.IUnknown)] out object ppInterface);
         }
     }
- 
     public partial class Form1 : Form
     {
         VCPPort _vcpport;
+
         public Form1()
         {
             InitializeComponent();
             doThread();
         }
-        
         private void doThread()
         {
             _vcpport = new VCPPort();
             Thread thr = new Thread(control);
             thr.Start();
         }
+        public enum States
+        {
+            volumePCDown = 69,
+            SleepComputer = 70,
+            volumePCUp = 71,
+            previousSong = 68,
+            nextSong = 64,
+            playSong = 67,
+            volumeSongDown = 7,
+            volumeSongUp = 21,
+            previousLine=22,
+            thisLine=25,
+            nextLine=13
+        }
         private void control()
         {
             bool funkcja = false;
-            int indata = _vcpport._indata;
+            int indata;
+            #region ListaOdtwarzania
             var pl = axWindowsMediaPlayer1.playlistCollection.newPlaylist("playlist");
             pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\1.mp3"));
             pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\2.mp3"));
@@ -118,6 +131,7 @@ namespace WindowsMediaPlayer
             pl.appendItem(axWindowsMediaPlayer1.newMedia(@"C:\Users\E Kaczmarek\Music\10.mp3"));
             axWindowsMediaPlayer1.currentPlaylist = pl;
             axWindowsMediaPlayer1.Ctlcontrols.stop();
+            #endregion ListaOdtwarzania
             indata = _vcpport._indata;
             while (indata >= 0) 
             {
@@ -127,9 +141,10 @@ namespace WindowsMediaPlayer
                     _vcpport._indata = 0;
                     funkcja = false;
                 }
-                switch (indata)
+                
+                switch ((States) indata)
                 {
-                    case 69:
+                    case States.volumePCDown:
                         {
                             float vol = VolumeUtilities.GetMasterVolume();
                             if (vol > 0)
@@ -141,14 +156,14 @@ namespace WindowsMediaPlayer
                             funkcja = true;
                             break;
                         }
-                    case 70:
+                    case States.SleepComputer:
                         {
                             Computer.SetSuspendState(true, true, true);
                             indata = 0;
                             funkcja = true;
                             break;
                         }
-                    case 71:
+                    case States.volumePCUp:
                         {
                             float vol = VolumeUtilities.GetMasterVolume();
                             if (vol < 1)
@@ -160,42 +175,42 @@ namespace WindowsMediaPlayer
                             funkcja = true;
                             break;
                         }
-                    case 68:
+                    case States.previousSong:
                         {
                             axWindowsMediaPlayer1.Ctlcontrols.previous();
                             indata = 0;
                             funkcja = true;
                             break;
                         }
-                    case 64:
+                    case States.nextSong:
                         {
                             axWindowsMediaPlayer1.Ctlcontrols.next();
                             indata = 0;
                             funkcja = true;
                             break;
                         }
-                    case 67:
+                    case States.playSong:
                         {
                             axWindowsMediaPlayer1.Ctlcontrols.play();
                             indata = 0;
                             funkcja = true;
                             break;
                         }
-                    case 7:
+                    case States.volumeSongDown:
                         {
                             axWindowsMediaPlayer1.settings.volume -= 1;
                             indata = 0;
                             funkcja = true;
                             break;
                         }
-                    case 21:
+                    case States.volumeSongUp:
                         {
                             axWindowsMediaPlayer1.settings.volume += 1;
                             indata = 0;
                             funkcja = true;
                             break;
                         }
-                    case 9:
+                    case States.previousLine:
                         {
                             KeyboardSend.KeyDown(Keys.F17);
                             KeyboardSend.KeyUp(Keys.F17);
@@ -203,7 +218,7 @@ namespace WindowsMediaPlayer
                             funkcja = true;
                             break;
                         }
-                    case 22:
+                    case States.thisLine:
                         {
                             KeyboardSend.KeyDown(Keys.F16);
                             KeyboardSend.KeyUp(Keys.F16);
@@ -211,7 +226,7 @@ namespace WindowsMediaPlayer
                             funkcja = true;
                             break;
                         }
-                    case 25:
+                    case States.nextLine:
                         {
                             KeyboardSend.KeyDown(Keys.F15);
                             KeyboardSend.KeyUp(Keys.F15);
@@ -219,14 +234,7 @@ namespace WindowsMediaPlayer
                             funkcja = true;
                             break;
                         }
-                    case 13:
-                        {
-                            KeyboardSend.KeyDown(Keys.F14);
-                            KeyboardSend.KeyUp(Keys.F14);
-                            indata = 0;
-                            funkcja = true;
-                            break;
-                        }
+
                     default:
                         break;
                 }
