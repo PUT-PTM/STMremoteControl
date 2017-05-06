@@ -109,12 +109,26 @@ namespace WindowsMediaPlayer
             playSong = 67,
             volumeSongDown = 7,
             volumeSongUp = 21,
-            previousLine=22,
-            thisLine=25,
-            nextLine=13
+
+            previousLine=25,
+            thisLine=9,
+            nextLine=13,
+
+            number0=22,
+            number1=12,
+            number2=24,
+            number3=94,
+            number4=8,
+            number5=28,
+            number6=90,
+            number7=66,
+            number8=82,
+            number9=74
         }
         private void control()
         {
+            int line = 0;
+            int rightLine;
             bool funkcja = false;
             int indata;
             #region ListaOdtwarzania
@@ -212,33 +226,124 @@ namespace WindowsMediaPlayer
                         }
                     case States.previousLine:
                         {
-                            KeyboardSend.KeyDown(Keys.F17);
-                            KeyboardSend.KeyUp(Keys.F17);
+                            if (line == 0)
+                                line = 0;
+                            else
+                                line--;
                             indata = 0;
                             funkcja = true;
                             break;
                         }
                     case States.thisLine:
                         {
-                            KeyboardSend.KeyDown(Keys.F16);
-                            KeyboardSend.KeyUp(Keys.F16);
+                            KeyboardSend.KeyDown(Keys.A);
+                            KeyboardSend.KeyUp(Keys.A);
+                            /*rightLine = line;
+                            Thread thr = new Thread(lineOfKeyboard);
+                            thr.Start(rightLine);*/
                             indata = 0;
                             funkcja = true;
                             break;
                         }
                     case States.nextLine:
                         {
-                            KeyboardSend.KeyDown(Keys.F15);
-                            KeyboardSend.KeyUp(Keys.F15);
+                            if (line == 8)
+                                line = 8;
+                            else
+                                line++;
                             indata = 0;
                             funkcja = true;
                             break;
                         }
-
+                    case States.number0:
+                        {
+                            KeyboardSend.KeyDown(Keys.NumPad0);
+                            KeyboardSend.KeyUp(Keys.NumPad0);
+                            indata = 0;
+                            funkcja = true;
+                            break;
+                        }
+                    case States.number1:
+                        {
+                            KeyboardSend.KeyDown(Keys.NumPad1);
+                            KeyboardSend.KeyUp(Keys.NumPad1);
+                            indata = 0;
+                            funkcja = true;
+                            break;
+                        }
+                    case States.number2:
+                        {
+                            KeyboardSend.KeyDown(Keys.NumPad2);
+                            KeyboardSend.KeyUp(Keys.NumPad2);
+                            indata = 0;
+                            funkcja = true;
+                            break;
+                        }
+                    case States.number3:
+                        {
+                            KeyboardSend.KeyDown(Keys.NumPad3);
+                            KeyboardSend.KeyUp(Keys.NumPad3);
+                            indata = 0;
+                            funkcja = true;
+                            break;
+                        }
+                    case States.number4:
+                        {
+                            KeyboardSend.KeyDown(Keys.NumPad4);
+                            KeyboardSend.KeyUp(Keys.NumPad4);
+                            indata = 0;
+                            funkcja = true;
+                            break;
+                        }
+                    case States.number5:
+                        {
+                            KeyboardSend.KeyDown(Keys.NumPad5);
+                            KeyboardSend.KeyUp(Keys.NumPad5);
+                            indata = 0;
+                            funkcja = true;
+                            break;
+                        }
+                    case States.number6:
+                        {
+                            KeyboardSend.KeyDown(Keys.NumPad6);
+                            KeyboardSend.KeyUp(Keys.NumPad6);
+                            indata = 0;
+                            funkcja = true;
+                            break;
+                        }
+                    case States.number7:
+                        {
+                            KeyboardSend.KeyDown(Keys.NumPad7);
+                            KeyboardSend.KeyUp(Keys.NumPad7);
+                            indata = 0;
+                            funkcja = true;
+                            break;
+                        }
+                    case States.number8:
+                        {
+                            KeyboardSend.KeyDown(Keys.NumPad8);
+                            KeyboardSend.KeyUp(Keys.NumPad8);
+                            indata = 0;
+                            funkcja = true;
+                            break;
+                        }
+                    case States.number9:
+                        {
+                            KeyboardSend.KeyDown(Keys.NumPad9);
+                            KeyboardSend.KeyUp(Keys.NumPad9);
+                            indata = 0;
+                            funkcja = true;
+                            break;
+                        }
                     default:
                         break;
                 }
             }
+        }
+
+        private void lineOfKeyboard(object line)
+        {
+            
         }
     }
 }

@@ -75,7 +75,7 @@ void TIMER_1HZ_init(uint16_t a){
 
  	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);
  	TIM_TimeBaseInitTypeDef str;
- 	str.TIM_Period=2099; //WCZESNIEJ 8399, optymalnie 2099
+ 	str.TIM_Period=16799; //WCZESNIEJ 8399, optymalnie 2099,4199
  	str.TIM_Prescaler=a;
  	str.TIM_ClockDivision=TIM_CKD_DIV1;
 
