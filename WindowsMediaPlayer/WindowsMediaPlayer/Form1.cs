@@ -127,8 +127,6 @@ namespace WindowsMediaPlayer
         }
         private void control()
         {
-            int line = 0;
-            int rightLine;
             bool funkcja = false;
             int indata;
             #region ListaOdtwarzania
@@ -220,37 +218,6 @@ namespace WindowsMediaPlayer
                     case States.volumeSongUp:
                         {
                             axWindowsMediaPlayer1.settings.volume += 1;
-                            indata = 0;
-                            funkcja = true;
-                            break;
-                        }
-                    case States.previousLine:
-                        {
-                            if (line == 0)
-                                line = 0;
-                            else
-                                line--;
-                            indata = 0;
-                            funkcja = true;
-                            break;
-                        }
-                    case States.thisLine:
-                        {
-                            KeyboardSend.KeyDown(Keys.A);
-                            KeyboardSend.KeyUp(Keys.A);
-                            /*rightLine = line;
-                            Thread thr = new Thread(lineOfKeyboard);
-                            thr.Start(rightLine);*/
-                            indata = 0;
-                            funkcja = true;
-                            break;
-                        }
-                    case States.nextLine:
-                        {
-                            if (line == 8)
-                                line = 8;
-                            else
-                                line++;
                             indata = 0;
                             funkcja = true;
                             break;
