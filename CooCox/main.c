@@ -51,7 +51,7 @@ int main(void)
 					if(myIRData.command==28)
 							ALL_OFF;
 
-					for(i=0;i<7500000;i++);
+					for(i=0;i<7500000;i++);//bylo 7500000
 					if(possible == 1)
 						VCP_send_buffer(&myIRData.command,1);
 
