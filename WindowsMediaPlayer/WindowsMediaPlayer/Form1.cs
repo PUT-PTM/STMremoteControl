@@ -189,21 +189,24 @@ namespace WindowsMediaPlayer
                         }
                     case States.previousSong:
                         {
-                            axWindowsMediaPlayer1.Ctlcontrols.previous();
+                            KeyboardSend.KeyDown(Keys.MediaPreviousTrack);
+                            KeyboardSend.KeyUp(Keys.MediaPreviousTrack);
                             indata = 0;
                             funkcja = true;
                             break;
                         }
                     case States.nextSong:
                         {
-                            axWindowsMediaPlayer1.Ctlcontrols.next();
+                            KeyboardSend.KeyDown(Keys.MediaNextTrack);
+                            KeyboardSend.KeyUp(Keys.MediaNextTrack);
                             indata = 0;
                             funkcja = true;
                             break;
                         }
                     case States.playSong:
                         {
-                            axWindowsMediaPlayer1.Ctlcontrols.play();
+                            KeyboardSend.KeyDown(Keys.MediaPlayPause);
+                            KeyboardSend.KeyUp(Keys.MediaPlayPause);
                             indata = 0;
                             funkcja = true;
                             break;
