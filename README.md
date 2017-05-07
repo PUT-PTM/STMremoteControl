@@ -27,6 +27,7 @@ C, C#
 # Attributons
 https://www.mikrocontroller.net/articles/IRMP <br />
 https://github.com/xenovacivus/STM32DiscoveryVCP
+https://msdn.microsoft.com/pl-pl/library/windows/desktop/dd375731(v=vs.85).aspx
 
 # Credits
 Elżbieta Kaczmarek <br />
