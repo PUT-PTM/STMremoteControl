@@ -4,16 +4,7 @@
 In the project STM32F407 Discovery microcontroller is used as a connection between IR receiver and computer.
 
 # Description
-Project consists of Coocox programm that sends data through Virtual COM Port and C# application (Music Player and interface to manage computer keyboard).
-
- 69 | 70 | 71 
---- | --- | ---
- 68 | 64 | 67 |
-  7 | 21 |  9 |
- 22 | 25 | 13 |
- 12 | 24 | 94 |
-  8 | 28 | 90 |
- 66 | 82 | 74 |
+Project consists of Coocox programm that sends data through Virtual COM Port and C# application (Music Player and interface to manage computer keyboard). 
 
 # Tools
 C, C#
