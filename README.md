@@ -9,15 +9,10 @@ Project consists of Coocox programm that sends data through Virtual COM Port and
  69 | 70 | 71 
 --- | --- | ---
  68 | 64 | 67 |
---- | --- | ---
   7 | 21 |  9 |
---- | --- | ---
  22 | 25 | 13 |
---- | --- | ---
  12 | 24 | 94 |
---- | --- | ---
   8 | 28 | 90 |
---- | --- | ---
  66 | 82 | 74 |
 
 # Tools
