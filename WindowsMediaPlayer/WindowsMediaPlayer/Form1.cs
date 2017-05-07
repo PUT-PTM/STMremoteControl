@@ -110,20 +110,20 @@ namespace WindowsMediaPlayer
             volumeSongDown = 7,
             volumeSongUp = 21,
 
-            previousLine=25,
-            thisLine=9,
-            nextLine=13,
+            previousLine = 25,
+            thisLine = 9,
+            nextLine = 13,
 
-            number0=22,
-            number1=12,
-            number2=24,
-            number3=94,
-            number4=8,
-            number5=28,
-            number6=90,
-            number7=66,
-            number8=82,
-            number9=74
+            number0 = 22,
+            number1 = 12,
+            number2 = 24,
+            number3 = 94,
+            number4 = 8,
+            number5 = 28,
+            number6 = 90,
+            number7 = 66,
+            number8 = 82,
+            number9 = 74
         }
         private void control()
         {
@@ -144,8 +144,9 @@ namespace WindowsMediaPlayer
             axWindowsMediaPlayer1.currentPlaylist = pl;
             axWindowsMediaPlayer1.Ctlcontrols.stop();
             #endregion ListaOdtwarzania
+            for (int i = 0; i < 2000000000; i++) ;
             indata = _vcpport._indata;
-            while (indata >= 0) 
+            while (indata >= 0)
             {
                 indata = _vcpport._indata;
                 if (funkcja == true)
@@ -153,8 +154,8 @@ namespace WindowsMediaPlayer
                     _vcpport._indata = 0;
                     funkcja = false;
                 }
-                
-                switch ((States) indata)
+
+                switch ((States)_vcpport._indata)
                 {
                     case States.volumePCDown:
                         {
@@ -309,11 +310,6 @@ namespace WindowsMediaPlayer
                         break;
                 }
             }
-        }
-
-        private void lineOfKeyboard(object line)
-        {
-            
         }
     }
 }

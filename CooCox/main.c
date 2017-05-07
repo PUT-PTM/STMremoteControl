@@ -34,27 +34,19 @@ int main(void)
 					// Button "4"
 					if(myIRData.command==8)
 							LED_GREEN_ON;
-
 					// Button "2"
 					if(myIRData.command==24)
 							LED_ORANGE_ON;
-
 					// Button "6"
 					if(myIRData.command==90)
 							LED_RED_ON;
-
 					// Button "8"
 					if(myIRData.command==82)
 							LED_BLUE_ON;
-
 					//Button "5"
 					if(myIRData.command==28)
 							ALL_OFF;
-
-					for(i=0;i<7500000;i++);//bylo 7500000
-					if(possible == 1)
-						VCP_send_buffer(&myIRData.command,1);
-
+					VCP_send_buffer(&myIRData.command,1);
 		      }
 		    }
 	}
@@ -75,7 +67,7 @@ void TIMER_1HZ_init(uint16_t a){
 
  	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);
  	TIM_TimeBaseInitTypeDef str;
- 	str.TIM_Period=16799; //WCZESNIEJ 8399, optymalnie 2099,4199
+ 	str.TIM_Period=2099; //WCZESNIEJ 8399, optymalnie 2099,4199
  	str.TIM_Prescaler=a;
  	str.TIM_ClockDivision=TIM_CKD_DIV1;
 
@@ -98,17 +90,9 @@ void TIM3_IRQHandler(void)
  {
  	if(TIM_GetITStatus(TIM3,TIM_IT_Update) != RESET)
  	{
- 		if(myIRData.command != 0){
 			if(lastCommand == myIRData.command){
-				possible = 0;
 				myIRData.command = 0;
 			}
-			else if (lastCommand != myIRData.command)
-				possible = 1;
- 		}
- 		else
- 			GPIO_ToggleBits(GPIOD, GPIO_Pin_14);
-
  		TIM_ClearITPendingBit(TIM3,TIM_IT_Update);
  	}
  }
