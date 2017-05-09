@@ -171,9 +171,9 @@ namespace WindowsMediaPlayer
                         }
                     case States.SleepComputer:
                         {
-                            Computer.SetSuspendState(true, true, true);
                             indata = 0;
                             funkcja = true;
+                            Computer.SetSuspendState(true, true, true);
                             break;
                         }
                     case States.volumePCUp:
