@@ -31,7 +31,7 @@ namespace WindowsMediaPlayer
 
             _serialPort.Open();
         }
-        private void DataReceivedHandler( object sender, SerialDataReceivedEventArgs e)
+        private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
         {
             int test = _serialPort.ReadByte();
             if (test > 1)
@@ -43,6 +43,8 @@ namespace WindowsMediaPlayer
                     Console.WriteLine("Data Received:");
                     Console.WriteLine(_indata);
                 }
+                else
+                    _lastReceived = 0;
             }
             else
             {

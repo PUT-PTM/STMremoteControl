@@ -23,37 +23,7 @@ int main(void)
 
 	while (1)
 	{
-		 // IR Data pollen
-		    if(UB_IRMP_Read(&myIRData)==TRUE) {
-		      // If IR data has been received
-		      if(myIRData.address==65280) {
-		        // If address from IR device is correct
-					// Button "4"
-					if(myIRData.command==8)
-							LED_GREEN_ON;
-					// Button "2"
-					if(myIRData.command==24)
-							LED_ORANGE_ON;
-					// Button "6"
-					if(myIRData.command==90)
-							LED_RED_ON;
-					// Button "8"
-					if(myIRData.command==82)
-							LED_BLUE_ON;
-					//Button "5"
-					if(myIRData.command==28)
-							ALL_OFF;
 
-					if(flag == 0){
-						for(i=0;i<100000;i++);
-						lastCommand = &myIRData.command;
-						VCP_send_buffer(lastCommand,1);
-					}
-					else if (flag == 1){
-						VCP_send_buffer(&flag,1);
-					}
-		      }
-		    }
 	}
 	return 0;
 }
@@ -75,7 +45,7 @@ void TIMER_1HZ_init(uint16_t a){
 
  	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);
  	TIM_TimeBaseInitTypeDef str;
- 	str.TIM_Period=4199; //WCZESNIEJ 8399, optymalnie 2099,4199
+ 	str.TIM_Period=2099; //WCZESNIEJ 8399, optymalnie 2099,4199
  	str.TIM_Prescaler=a;
  	str.TIM_ClockDivision=TIM_CKD_DIV1;
 
@@ -98,8 +68,42 @@ void TIM3_IRQHandler(void)
  {
  	if(TIM_GetITStatus(TIM3,TIM_IT_Update) != RESET)
 	{
+ 		 // IR Data pollen
+ 				    if(UB_IRMP_Read(&myIRData)==TRUE) {
+ 				      // If IR data has been received
+ 				      if(myIRData.address==65280) {
+ 				        // If address from IR device is correct
+ 							// Button "4"
+ 							if(myIRData.command==8)
+ 									LED_GREEN_ON;
+ 							// Button "2"
+ 							if(myIRData.command==24)
+ 									LED_ORANGE_ON;
+ 							// Button "6"
+ 							if(myIRData.command==90)
+ 									LED_RED_ON;
+ 							// Button "8"
+ 							if(myIRData.command==82)
+ 									LED_BLUE_ON;
+ 							//Button "5"
+ 							if(myIRData.command==28)
+ 									ALL_OFF;
+ 							if(flag = 1){
+ 								VCP_send_buffer(&myIRData.command,1);
+ 								lastCommand = myIRData.command;
+ 							}
+ 							else
+ 								VCP_send_buffer(flag,1);
+
+
+ 				      }
+ 				    }
  		if(lastCommand == myIRData.command)
+ 			flag =0;
+ 		else{
  			flag = 1;
+ 			myIRData.command = 0;
+ 		}
  		TIM_ClearITPendingBit(TIM3,TIM_IT_Update);
  	}
  }

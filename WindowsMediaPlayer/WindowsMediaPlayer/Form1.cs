@@ -110,9 +110,9 @@ namespace WindowsMediaPlayer
             volumeSongDown = 7,
             volumeSongUp = 21,
 
-            previousLine = 25,
-            thisLine = 9,
-            nextLine = 13,
+            plus = 25,
+            minus = 13,
+            eq = 9,
 
             number0 = 22,
             number1 = 12,
@@ -215,14 +215,32 @@ namespace WindowsMediaPlayer
                         {
                             indata = 0;
                             funkcja = true;
-                            axWindowsMediaPlayer1.settings.volume -= 1;
+                            float vol = VolumeUtilities.GetMasterVolume();
+                            if (vol > 0)
+                            {
+                                KeyboardSend.KeyUp(Keys.VolumeDown);
+                                KeyboardSend.KeyDown(Keys.VolumeDown);
+                            }
                             break;
                         }
                     case States.volumeSongUp:
                         {
                             indata = 0;
                             funkcja = true;
-                            axWindowsMediaPlayer1.settings.volume += 1;
+                            float vol = VolumeUtilities.GetMasterVolume();
+                            if (vol < 1)
+                            {
+                                KeyboardSend.KeyDown(Keys.VolumeUp);
+                                KeyboardSend.KeyUp(Keys.VolumeUp);
+                            }
+                            break;
+                        }
+                    case States.eq:
+                        {
+                            indata = 0;
+                            funkcja = true;
+                            KeyboardSend.KeyDown(Keys.VolumeMute);
+                            KeyboardSend.KeyUp(Keys.VolumeMute);
                             break;
                         }
                     case States.number0:
