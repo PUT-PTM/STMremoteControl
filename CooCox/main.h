@@ -35,6 +35,12 @@
 #include "usb_lib/otg/usb_regs.h"
 
 
+int lastCommand;
+
+uint8_t flag;
+/*Struct for IR-Data*/
+IRMP_DATA  myIRData;
+
 __ALIGN_BEGIN USB_OTG_CORE_HANDLE  USB_OTG_dev __ALIGN_END;
 
 

@@ -105,7 +105,7 @@ typedef struct
 {
   uint8_t                               protocol;                                   // protocol, i.e. NEC_PROTOCOL
   uint16_t                              address;                                    // address
-  //uint16_t                            	command;                                    // command
+  //uint16_t                            	command;                                	// command
   uint8_t                            	command;                                    // command
   uint8_t                               flags;                                      // flags, e.g. repetition
 } IRMP_DATA;

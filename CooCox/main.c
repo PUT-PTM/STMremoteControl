@@ -1,9 +1,5 @@
 #include "main.h"
 
-int lastCommand;
-int possible;
-/*Struct for IR-Data*/
-IRMP_DATA  myIRData;
 
 int main(void)
 {
@@ -22,6 +18,7 @@ int main(void)
 	/*Init Timer */
 	TIMER_1HZ_init(9999);
 	TIMER_Interrupt_init();
+	uint8_t flag= 0;
 	int i;
 
 	while (1)
@@ -46,7 +43,15 @@ int main(void)
 					//Button "5"
 					if(myIRData.command==28)
 							ALL_OFF;
-					VCP_send_buffer(&myIRData.command,1);
+
+					if(flag == 0){
+						for(i=0;i<100000;i++);
+						lastCommand = &myIRData.command;
+						VCP_send_buffer(lastCommand,1);
+					}
+					else if (flag == 1){
+						VCP_send_buffer(&flag,1);
+					}
 		      }
 		    }
 	}
@@ -63,11 +68,14 @@ void init()
 
 	return;
 }
+int button_pressed(){
+
+}
 void TIMER_1HZ_init(uint16_t a){
 
  	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);
  	TIM_TimeBaseInitTypeDef str;
- 	str.TIM_Period=2099; //WCZESNIEJ 8399, optymalnie 2099,4199
+ 	str.TIM_Period=4199; //WCZESNIEJ 8399, optymalnie 2099,4199
  	str.TIM_Prescaler=a;
  	str.TIM_ClockDivision=TIM_CKD_DIV1;
 
@@ -89,10 +97,9 @@ void TIMER_Interrupt_init(void)
 void TIM3_IRQHandler(void)
  {
  	if(TIM_GetITStatus(TIM3,TIM_IT_Update) != RESET)
- 	{
-			if(lastCommand == myIRData.command){
-				myIRData.command = 0;
-			}
+	{
+ 		if(lastCommand == myIRData.command)
+ 			flag = 1;
  		TIM_ClearITPendingBit(TIM3,TIM_IT_Update);
  	}
  }

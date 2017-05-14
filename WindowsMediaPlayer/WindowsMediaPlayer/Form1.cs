@@ -144,7 +144,6 @@ namespace WindowsMediaPlayer
             axWindowsMediaPlayer1.currentPlaylist = pl;
             axWindowsMediaPlayer1.Ctlcontrols.stop();
             #endregion ListaOdtwarzania
-            for (int i = 0; i < 2000000000; i++) ;
             indata = _vcpport._indata;
             while (indata >= 0)
             {
@@ -159,14 +158,14 @@ namespace WindowsMediaPlayer
                 {
                     case States.volumePCDown:
                         {
+                            indata = 0;
+                            funkcja = true;
                             float vol = VolumeUtilities.GetMasterVolume();
                             if (vol > 0)
                             {
                                 KeyboardSend.KeyUp(Keys.VolumeDown);
                                 KeyboardSend.KeyDown(Keys.VolumeDown);
                             }
-                            indata = 0;
-                            funkcja = true;
                             break;
                         }
                     case States.SleepComputer:
@@ -178,52 +177,52 @@ namespace WindowsMediaPlayer
                         }
                     case States.volumePCUp:
                         {
+                            indata = 0;
+                            funkcja = true;
                             float vol = VolumeUtilities.GetMasterVolume();
                             if (vol < 1)
                             {
                                 KeyboardSend.KeyDown(Keys.VolumeUp);
                                 KeyboardSend.KeyUp(Keys.VolumeUp);
                             }
-                            indata = 0;
-                            funkcja = true;
                             break;
                         }
                     case States.previousSong:
                         {
-                            KeyboardSend.KeyDown(Keys.MediaPreviousTrack);
-                            KeyboardSend.KeyUp(Keys.MediaPreviousTrack);
                             indata = 0;
                             funkcja = true;
+                            KeyboardSend.KeyDown(Keys.MediaPreviousTrack);
+                            KeyboardSend.KeyUp(Keys.MediaPreviousTrack);
                             break;
                         }
                     case States.nextSong:
                         {
-                            KeyboardSend.KeyDown(Keys.MediaNextTrack);
-                            KeyboardSend.KeyUp(Keys.MediaNextTrack);
                             indata = 0;
                             funkcja = true;
+                            KeyboardSend.KeyDown(Keys.MediaNextTrack);
+                            KeyboardSend.KeyUp(Keys.MediaNextTrack);
                             break;
                         }
                     case States.playSong:
                         {
-                            KeyboardSend.KeyDown(Keys.MediaPlayPause);
-                            KeyboardSend.KeyUp(Keys.MediaPlayPause);
                             indata = 0;
                             funkcja = true;
+                            KeyboardSend.KeyDown(Keys.MediaPlayPause);
+                            KeyboardSend.KeyUp(Keys.MediaPlayPause);
                             break;
                         }
                     case States.volumeSongDown:
                         {
-                            axWindowsMediaPlayer1.settings.volume -= 1;
                             indata = 0;
                             funkcja = true;
+                            axWindowsMediaPlayer1.settings.volume -= 1;
                             break;
                         }
                     case States.volumeSongUp:
                         {
-                            axWindowsMediaPlayer1.settings.volume += 1;
                             indata = 0;
                             funkcja = true;
+                            axWindowsMediaPlayer1.settings.volume += 1;
                             break;
                         }
                     case States.number0:

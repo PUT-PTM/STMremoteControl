@@ -11,6 +11,7 @@ namespace WindowsMediaPlayer
     public class VCPPort
     {
         public static SerialPort _serialPort;
+        static int _lastReceived;
         public int _indata { get; set; }
         public VCPPort()
         {
@@ -32,9 +33,21 @@ namespace WindowsMediaPlayer
         }
         private void DataReceivedHandler( object sender, SerialDataReceivedEventArgs e)
         {
-            int indata = _serialPort.ReadByte();
-            _indata = indata;
-            for (int i = 0; i < 100000000; i++) ;
+            int test = _serialPort.ReadByte();
+            if (test > 1)
+            {
+                if (_lastReceived != test)
+                {
+                    _indata = test;
+                    _lastReceived = _indata;
+                    Console.WriteLine("Data Received:");
+                    Console.WriteLine(_indata);
+                }
+            }
+            else
+            {
+                _lastReceived = 0;
+            }
         }
     }
 }
