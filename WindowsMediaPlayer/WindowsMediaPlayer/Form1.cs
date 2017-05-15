@@ -110,8 +110,8 @@ namespace WindowsMediaPlayer
             volumeSongDown = 7,
             volumeSongUp = 21,
 
-            plus = 25,
-            minus = 13,
+            stoplus = 25,
+            dwiescieplus = 13,
             eq = 9,
 
             number0 = 22,
@@ -218,8 +218,8 @@ namespace WindowsMediaPlayer
                             float vol = VolumeUtilities.GetMasterVolume();
                             if (vol > 0)
                             {
-                                KeyboardSend.KeyUp(Keys.VolumeDown);
                                 KeyboardSend.KeyDown(Keys.VolumeDown);
+                                KeyboardSend.KeyUp(Keys.VolumeDown);
                             }
                             break;
                         }
@@ -241,6 +241,22 @@ namespace WindowsMediaPlayer
                             funkcja = true;
                             KeyboardSend.KeyDown(Keys.VolumeMute);
                             KeyboardSend.KeyUp(Keys.VolumeMute);
+                            break;
+                        }
+                    case States.stoplus:
+                        {
+                            indata = 0;
+                            funkcja = true;
+                            KeyboardSend.KeyDown(Keys.Snapshot);
+                            KeyboardSend.KeyUp(Keys.Snapshot);
+                            break;
+                        }
+                    case States.dwiescieplus:
+                        {
+                            indata = 0;
+                            funkcja = true;
+                            KeyboardSend.KeyDown(Keys.LButton);
+                            KeyboardSend.KeyUp(Keys.LButton);
                             break;
                         }
                     case States.number0:

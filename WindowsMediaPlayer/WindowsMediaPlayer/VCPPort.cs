@@ -34,7 +34,7 @@ namespace WindowsMediaPlayer
         private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
         {
             int test = _serialPort.ReadByte();
-            if (test > 1)
+            if (test > 0)
             {
                 if (_lastReceived != test)
                 {

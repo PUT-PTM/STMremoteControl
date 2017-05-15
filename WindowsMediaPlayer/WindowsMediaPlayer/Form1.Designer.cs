@@ -56,8 +56,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.Controls.Add(this.axWindowsMediaPlayer1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "MediaPlayer";
+            this.Text = "MediaPlayer";
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).EndInit();
             this.ResumeLayout(false);
 

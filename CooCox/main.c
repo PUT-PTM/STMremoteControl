@@ -18,7 +18,7 @@ int main(void)
 	/*Init Timer */
 	TIMER_1HZ_init(9999);
 	TIMER_Interrupt_init();
-	uint8_t flag= 0;
+	flag = 0;
 	int i;
 
 	while (1)
@@ -45,9 +45,9 @@ void TIMER_1HZ_init(uint16_t a){
 
  	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);
  	TIM_TimeBaseInitTypeDef str;
- 	str.TIM_Period=2099; //WCZESNIEJ 8399, optymalnie 2099,4199
- 	str.TIM_Prescaler=a;
- 	str.TIM_ClockDivision=TIM_CKD_DIV1;
+ 	str.TIM_Period = 2099; //WCZESNIEJ 8399, optymalnie 2099,4199
+ 	str.TIM_Prescaler = a;
+ 	str.TIM_ClockDivision = TIM_CKD_DIV1;
 
  	str.TIM_CounterMode=TIM_CounterMode_Up;
  	TIM_TimeBaseInit(TIM3,&str);
@@ -88,18 +88,21 @@ void TIM3_IRQHandler(void)
  							//Button "5"
  							if(myIRData.command==28)
  									ALL_OFF;
+
  							if(flag = 1){
  								VCP_send_buffer(&myIRData.command,1);
  								lastCommand = myIRData.command;
  							}
- 							else
+ 							else{
  								VCP_send_buffer(flag,1);
+ 								flag = 1;
+ 							}
 
 
  				      }
  				    }
  		if(lastCommand == myIRData.command)
- 			flag =0;
+ 			flag = 0;
  		else{
  			flag = 1;
  			myIRData.command = 0;
