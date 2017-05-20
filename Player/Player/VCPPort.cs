@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
-using System.Windows.Forms;
 
-namespace WindowsMediaPlayer
+namespace Player
 {
-    public class VCPPort
+    class VCPPort
     {
         public static SerialPort _serialPort;
         static int _lastReceived;
