@@ -6,14 +6,31 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Input;
 using System.Runtime.InteropServices;
+using Microsoft.Win32;
+using System.IO;
 
 namespace Player
 {
     class Program
     {
+
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        const int SW_HIDE = 0;
+        const int SW_SHOW = 5;
+
+        static RegistryKey reg = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
         static VCPPort _vcpport;
         static void Main(string[] args)
         {
+            var handle = GetConsoleWindow();
+            ShowWindow(handle, SW_HIDE);
+            reg.SetValue("Player", @"C:\Users\E Kaczmarek\Desktop\Programowanie + LINUX\PTM\Player\Player\bin\Debug\Player.exe" );
             _vcpport = new VCPPort();
             Thread thr = new Thread(control);
             thr.Start();
