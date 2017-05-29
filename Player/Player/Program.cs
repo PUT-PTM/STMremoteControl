@@ -23,13 +23,12 @@ namespace Player
         const int SW_HIDE = 0;
         const int SW_SHOW = 5;
 
-        static RegistryKey reg = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-
         static VCPPort _vcpport;
         static void Main(string[] args)
         {
             var handle = GetConsoleWindow();
             ShowWindow(handle, SW_HIDE);
+            RegistryKey reg = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             reg.SetValue("Player", @"C:\Users\E Kaczmarek\Desktop\Programowanie + LINUX\PTM\Player\Player\bin\Debug\Player.exe" );
             _vcpport = new VCPPort();
             Thread thr = new Thread(control);
