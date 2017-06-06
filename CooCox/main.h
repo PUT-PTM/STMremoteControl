@@ -1,5 +1,3 @@
-#define HSE_VALUE ((uint32_t)8000000) /* STM32 discovery uses a 8Mhz external crystal */
-
 #include "irmp.h"
 #include "irmpconfig.h"
 #include "irmpprotocols.h"
@@ -36,13 +34,12 @@
 
 
 int lastCommand;
-
 uint8_t flag;
-/*Struct for IR-Data*/
 IRMP_DATA  myIRData;
 
 __ALIGN_BEGIN USB_OTG_CORE_HANDLE  USB_OTG_dev __ALIGN_END;
 
+#define HSE_VALUE ((uint32_t)8000000) 
 
 #define LED_BLUE_ON GPIOD->BSRRL = GPIO_Pin_15;
 #define LED_BLUE_OFF GPIOD->BSRRH = GPIO_Pin_15;

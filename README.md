@@ -15,10 +15,10 @@ Tools
 
 How to compile
 ----------------
-	- Go to /STMremoteControl/CooCox/
-	- Open CooCox project (STMremoteControl.coproj)
-	- Build project and save it on microcontroler
-	- Go to part "How to run"
+>- Go to /STMremoteControl/CooCox/
+>- Open CooCox project (STMremoteControl.coproj)
+>- Build project and save it on microcontroler
+>- Go to part "How to run"
 
 How to run
 ------------
