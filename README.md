@@ -6,7 +6,7 @@ In the project STM32F407 Discovery microcontroller is used as a connection betwe
 
 Description
 -------------
-Project consists of Coocox programm that sends data through Virtual COM Port and C# application (Music Player and interface to managecomputer keyboard). 
+Project consists of Coocox programm that sends data through Virtual COM Port and C# application (Interface to manage multimedia buttons of computer). 
 
 Tools
 -------
@@ -34,6 +34,11 @@ Attributons
 >- https://www.mikrocontroller.net/articles/IRMP <br />
 >- https://github.com/xenovacivus/STM32DiscoveryVCP
 >- https://msdn.microsoft.com/pl-pl/library/windows/desktop/dd375731(v=vs.85).aspx
+
+Attributons
+-------------
+MIT license
+
 
 Credits
 ---------
