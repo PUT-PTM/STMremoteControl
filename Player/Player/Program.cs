@@ -28,8 +28,6 @@ namespace Player
         {
             var handle = GetConsoleWindow();
             ShowWindow(handle, SW_HIDE);
-            RegistryKey reg = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            reg.SetValue("Player", @"C:\Users\E Kaczmarek\Desktop\Programowanie + LINUX\PTM\Player\Player\bin\Debug\Player.exe" );
             _vcpport = new VCPPort();
             Thread thr = new Thread(control);
             thr.Start();
