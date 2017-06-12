@@ -6,7 +6,8 @@ In the project STM32F407 Discovery microcontroller is used as a connection betwe
 
 Description
 -------------
-Project consists of Coocox programm that sends data through Virtual COM Port and C# application (Interface to manage multimedia buttons of computer). 
+Project consists of Coocox program that receives data from receiver (USART) and sends data through Virtual COM Port. C# application 
+controls multimedia buttons (Play/Pause/Next/Previous/Sound) in order to control music players like Spotify on computer.
 
 Tools
 -------
