@@ -43,9 +43,6 @@ namespace Player
             playSong = 67,
             volumeSongDown = 7,
             volumeSongUp = 21,
-
-            stoplus = 25,
-            dwiescieplus = 13,
             eq = 9
         }
         static private void control()

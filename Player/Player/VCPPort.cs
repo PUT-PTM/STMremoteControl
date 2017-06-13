@@ -22,7 +22,6 @@ namespace Player
             _serialPort.StopBits = (StopBits)Enum.Parse(typeof(StopBits), _serialPort.StopBits.ToString(), true);
             _serialPort.Handshake = (Handshake)Enum.Parse(typeof(Handshake), _serialPort.Handshake.ToString(), true);
 
-            // Set the read/write timeouts
             _serialPort.ReadTimeout = 500;
             _serialPort.WriteTimeout = 500;
 
@@ -32,6 +31,7 @@ namespace Player
         }
         private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
         {
+
             int test = _serialPort.ReadByte();
             if (test > 0)
             {
